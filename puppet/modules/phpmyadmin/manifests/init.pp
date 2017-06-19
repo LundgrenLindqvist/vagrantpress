@@ -1,16 +1,38 @@
-# Install phpMyAdmin
+# Install latest phpMyAdmin
 
 class phpmyadmin::install {
 
-  package { 'phpmyadmin':
-    ensure => present,
+  exec { 'download-phpmyadmin':
+    command => '/usr/bin/wget https://files.phpmyadmin.net/phpMyAdmin/4.7.1/phpMyAdmin-4.7.1-all-languages.zip',
+    cwd     => '/vagrant/',
+    creates => '/vagrant/phpMyAdmin-4.7.1-all-languages.zip'
   }
 
-  file { '/etc/apache2/sites-enabled/001-phpmyadmin':
-    ensure  => link,
-    target  => '/etc/phpmyadmin/apache.conf',
-    require => Package['apache2'],
-    notify  => Service['apache2'],
+  package { 'unzip':
+    ensure => present,
+    notify => Exec['unzip-phpmyadmin']
+  }
+
+  exec { 'unzip-phpmyadmin':
+    cwd     => '/vagrant/',
+    user    => 'root',
+    command => '/usr/bin/unzip /vagrant/phpMyAdmin-4.7.1-all-languages.zip',
+    require => Exec['download-phpmyadmin'],
+    creates => '/vagrant/phpMyAdmin-4.7.1-all-languages',
+  }->
+
+  file { '/vagrant/phpmyadmin':
+    ensure => 'directory',
+    recurse => true,
+    source => 'file:///vagrant/phpMyAdmin-4.7.1-all-languages',
+    before => File['/vagrant/phpMyAdmin-4.7.1-all-languages'],
+  }->
+
+  file { '/vagrant/phpMyAdmin-4.7.1-all-languages':
+    ensure => 'absent',
+    purge => true,
+    recurse => true,
+    force => true,
   }
 
 }

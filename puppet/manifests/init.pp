@@ -8,11 +8,8 @@ exec { 'apt_update':
 Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/", "/usr/local/bin", "/usr/local/sbin", "~/.composer/vendor/bin/" ] }
 
 class { 'git::install': }
-class { 'subversion::install': }
-class { 'apache2::install': }
+class { 'nginx::install': }
 class { 'php5::install': }
 class { 'mysql::install': }
 class { 'wordpress::install': }
 class { 'phpmyadmin::install': }
-class { 'composer::install': }
-class { 'phpqa::install': }
