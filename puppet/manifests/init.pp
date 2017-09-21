@@ -9,7 +9,7 @@ Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/", "/usr/local/bin"
 
 class { 'git::install': }
 class { 'nginx::install': }
-class { 'php5::install': }
-class { 'mysql::install': }
+class { 'php7::install': }
+class { 'mariadb::install': }
 class { 'wordpress::install': }
 class { 'phpmyadmin::install': }

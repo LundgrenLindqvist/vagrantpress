@@ -35,15 +35,15 @@ class wordpress::install {
   }
 
   exec { 'load-db':
-    command => '/usr/bin/mysql -u wordpress -pwordpress wordpress < /tmp/wordpress-db.sql && touch /home/vagrant/db-created',
-    creates => '/home/vagrant/db-created',
+    command => '/usr/bin/mysql -u wordpress -pwordpress wordpress < /tmp/wordpress-db.sql && touch /vagrant/db-created',
+    creates => '/vagrant/db-created',
   }
 
   # Copy a working wp-config.php file for the vagrant setup.
   file { '/vagrant/wordpress/wp-config.php':
     source => 'puppet:///modules/wordpress/wp-config.php'
   }
-  
+
    # Create the Wordpress Unit Tests database
   exec { 'create-tests-database':
     unless  => '/usr/bin/mysql -u root -pvagrant wp_tests',
@@ -58,6 +58,6 @@ class wordpress::install {
   # Copy a working wp-tests-config.php file for the vagrant setup.
   file { '/vagrant/wordpress/wp-tests-config.php':
     source  => 'puppet:///modules/wordpress/wp-tests-config.php',
-	require => Exec['untar-wordpress'],
+    require => Exec['untar-wordpress'],
   }
 }

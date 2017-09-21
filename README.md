@@ -12,9 +12,9 @@ We've made the following changes:
 
 # What's Installed
 
-+ Ubuntu 14.04
++ Ubuntu 16.04
 + Wordpress
-+ MySQL
++ MariaDB
 + PHP
 + phpMyAdmin
 + Git
