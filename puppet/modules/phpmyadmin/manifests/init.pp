@@ -3,20 +3,14 @@
 class phpmyadmin::install {
 
   exec { 'download-phpmyadmin':
-    command => '/usr/bin/wget https://files.phpmyadmin.net/phpMyAdmin/4.7.1/phpMyAdmin-4.7.1-all-languages.zip',
+    command => '/usr/bin/wget https://files.phpmyadmin.net/phpMyAdmin/4.7.7/phpMyAdmin-4.7.7-all-languages.tar.gz',
     cwd     => '/vagrant/',
     creates => '/vagrant/phpMyAdmin-4.7.1-all-languages.zip'
   }
 
-  package { 'unzip':
-    ensure => present,
-    notify => Exec['unzip-phpmyadmin']
-  }
-
-  exec { 'unzip-phpmyadmin':
+  exec { 'untar-phpmyadmin':
     cwd     => '/vagrant/',
-    user    => 'root',
-    command => '/usr/bin/unzip /vagrant/phpMyAdmin-4.7.1-all-languages.zip',
+    command => '/bin/tar xzf /vagrant/phpMyAdmin-4.7.1-all-languages.tar.gz',
     require => Exec['download-phpmyadmin'],
     creates => '/vagrant/phpMyAdmin-4.7.1-all-languages',
   }->
