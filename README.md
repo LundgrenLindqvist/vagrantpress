@@ -35,19 +35,19 @@ starting up a working WordPress is as follows:
 2. Extract the directory and `cd` into it
 3. Run `vagrant plugin install vagrant-hostsupdater` if you haven't already
 4. Run `vagrant up`
-5. Open [vagrantpress.dev](http://vagrantpress.dev) in your browser
+5. Open [vagrantpress.test](http://vagrantpress.test) in your browser
 
 ## Working with the environment
 
 To log in to Wordpress:
 
-URL: http://vagrantpress.dev/wp-admin/
+URL: http://vagrantpress.test/wp-admin/
 Username: `admin`
 Password: `vagrant`
 
 To log in to phpMyAdmin:
 
-URL: http://vagrantpress.dev/phpmyadmin/
+URL: http://vagrantpress.test/phpmyadmin/
 Username: `wordpress`
 Password: `wordpress`
 
