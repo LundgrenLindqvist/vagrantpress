@@ -24,9 +24,9 @@ class wordpress::install {
 
   exec { 'untar-wordpress':
     cwd     => '/vagrant/',
-    command => '/bin/tar xzvf /vagrant/latest.tar.gz',
+    command => '/bin/tar xzf /vagrant/latest.tar.gz',
     require => Exec['download-wordpress'],
-    creates => '/vagrant/wordpress',
+    creates => '/vagrant/wordpress/index.php',
   }
 
   # Import a MySQL database for a basic wordpress site.
