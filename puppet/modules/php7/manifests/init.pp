@@ -10,6 +10,7 @@ class php7::install {
       'php7.0-mbstring',
       'php7.0-mysql',
       'php-apcu',
+      'php-imagick',
       'php-xdebug'
     ]:
     ensure => present
