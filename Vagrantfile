@@ -2,7 +2,9 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/xenial64"
+  # We would prefer to use the official ubuntu/xenial64 box, but it has given us a
+  # lot of grief with SSH authentication failures, so we tried this box instead
+  config.vm.box = "bento/ubuntu-16.04"
 
   config.vm.synced_folder ".", "/vagrant", :owner => "www-data"
   # Use this line as a template for syncing the theme directory
