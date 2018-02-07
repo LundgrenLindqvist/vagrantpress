@@ -18,7 +18,7 @@ class php7::install {
 
     file { '/etc/php/7.0/fpm/php.ini':
       source => '/vagrant/files/etc/php/7.0/fpm/php.ini',
-    }->
+    }~>
 
     service { 'php7.0-fpm':
       ensure => running,
