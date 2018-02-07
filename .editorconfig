@@ -5,5 +5,5 @@ insert_final_newline = true
 indent_style = space
 indent_size = 2
 
-[default.conf]
+[vagrantpress.conf]
 indent_size = 4

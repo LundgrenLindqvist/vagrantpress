@@ -6,16 +6,16 @@ class nginx::install {
     ensure => present,
   }->
 
-  file { '/etc/nginx/sites-available/default.conf':
-    source  => '/vagrant/files/etc/nginx/sites-available/default.conf',
+  file { '/etc/nginx/sites-available/vagrantpress.conf':
+    source  => '/vagrant/files/etc/nginx/sites-available/vagrantpress.conf',
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
   }->
 
-  file { '/etc/nginx/sites-enabled/default.conf':
+  file { '/etc/nginx/sites-enabled/vagrantpress.conf':
     ensure  => link,
-    target  => '/etc/nginx/sites-available/default.conf',
+    target  => '/etc/nginx/sites-available/vagrantpress.conf',
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
