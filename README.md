@@ -1,63 +1,23 @@
-# VagrantPress
+# L+L server configuration
 
-This is a fork of the original [vagrantpress/vagrantpress](https://github.com/vagrantpress/vagrantpress).
-We've made the following changes:
+This repository contains [Puppet](https://puppet.com/) scripts for setting up a new Linux with WordPress and phpMyAdmin installed.
 
-- Drop support for Composer
-- Drop support for PHP Quality Assurance Toolchain
-- Drop support for Subversion
-- Use nginx rather than Apache
-- Increase the maximum file upload size in both nginx and PHP config files
-- Make www-data the default owner of the synced Vagrant directory
+There's also a Vagrantfile here! That's because these server configuration scripts grew out of our fork of [vagrantpress](https://github.com/vagrantpress/vagrantpress). Now, we use the same server deployment scripts for production and development environments, so it makes sense to keep it all in one place.
 
-# What's Installed
-
-+ Ubuntu 16.04
-+ Wordpress
-+ MariaDB
-+ PHP
-+ phpMyAdmin
-+ Git
-+ XDebug
-
-# Prerequisites
-
-+ [Vagrant](http://www.vagrantup.com/downloads.html)
-+ [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-+ [Vagrant Hostsupdater](https://github.com/cogitatio/vagrant-hostsupdater)
-
-## Getting Started
-
-This is a fairly simple project to get up and running. The procedure for
-starting up a working WordPress is as follows:
+## Getting started with a development environment
 
 1. [Download](https://github.com/LundgrenLindqvist/vagrantpress/archive/master.zip) the project
 2. Extract the directory and `cd` into it
 3. Run `vagrant plugin install vagrant-hostsupdater` if you haven't already
-4. Run `vagrant up`
-5. Open [vagrantpress.test](http://vagrantpress.test) in your browser
+4. Change the variables in `puppet/data/common.yaml` as needed
+5. Run `vagrant up`
+6. Open [vagrantpress.test](http://vagrantpress.test) in your browser
 
-## Working with the environment
+## Getting started with a production environment
 
-To log in to Wordpress:
-
-URL: http://vagrantpress.test/wp-admin/
-Username: `admin`
-Password: `vagrant`
-
-To log in to phpMyAdmin:
-
-URL: http://vagrantpress.test/phpmyadmin/
-Username: `wordpress`
-Password: `wordpress`
-
-## Common Troubleshooting Tips
-
-* Have a look at the [troubleshooting guide][ts]
-
-## Getting Help
-
-Feel free to file an issue, create a pull request, or contact me at [my website][chadthompson].
-
-[chadthompson]: http://chadthompson.me
-[ts]: https://github.com/chad-thompson/vagrantpress/wiki/Troubleshooting-tips
+1. Deploy a new server with [Linode Manager](https://manager.linode.com)
+2. Use the web console to SSH into the server as root
+3. Run `wget https://github.com/LundgrenLindqvist/vagrantpress/archive/master.zip`
+4. Run `unzip master.zip`
+5. Change the variables in `master/puppet/data/common.yaml` as needed
+6. Run `./master/puppet-apply.sh`
