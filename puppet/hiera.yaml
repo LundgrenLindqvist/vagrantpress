@@ -1,0 +1,7 @@
+---
+version: 5
+hierarchy:
+ -
+    name: "Common data"
+    datadir: "/vagrant/puppet/data"
+    path: "common.yaml"

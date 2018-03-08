@@ -1,0 +1,14 @@
+---
+hostname: vagrantpress.test
+
+ll_password: p4ssw0rd
+www_data_password: p4ssw0rd
+mysql_root_password: p4ssw0rd
+mysql_wordpress_password: p4ssw0rd
+
+nginx_root: /var/www/vagrantpress.test
+wordpress_root: /var/www/vagrantpress.test/wordpress
+phpmyadmin_root: /var/www/vagrantpress.test/phpmyadmin
+
+wordpress_version: 4.9.4
+phpmyadmin_version: 4.7.9
