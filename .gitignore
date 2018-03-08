@@ -1,8 +1,10 @@
 .vagrant
-.ey_local_data
 .DS_Store
 latest.tar.gz
 ./wordpress/
 /wordpress/
-/wp-tests/
 /phpMyAdmin*
+/puppet/modules/*
+!/puppet/modules/nginx
+!/puppet/modules/php7
+!/puppet/modules/phpmyadmin

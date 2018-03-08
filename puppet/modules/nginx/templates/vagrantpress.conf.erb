@@ -1,0 +1,81 @@
+server {
+    listen 80;
+    server_name <%= @web_hostname %> www.<%= @web_hostname %>;
+
+    root <%= @web_root %>;
+    index index.php index.html;
+    client_max_body_size 200m;
+    charset utf-8;
+    proxy_read_timeout 120;
+
+    gzip on;
+    gzip_vary on;
+    gzip_types text/plain text/css text/xml application/json application/javascript application/xml;
+
+    <% if @no_sendfile %>
+    # This fixes a bug in VirtualBox related to sendfile that can corrupt files.
+    # See http://stackoverflow.com/a/29588517/618739 for more details
+    sendfile off;
+    <% end %>
+
+    location / {
+        try_files $uri $uri/ /wordpress$uri /index.php?$args;
+    }
+
+    location = /wp-login.php {
+        return 302 https://$host/wordpress/wp-admin;
+    }
+
+    # Add trailing slash to */wp-admin requests
+    rewrite /wp-admin$ $scheme://$host$uri/ permanent;
+
+    # Block xmlrpc DDoS
+    location /xmlrpc.php {
+        deny all;
+        access_log off;
+    }
+
+    # Directives to send expires headers and turn off 404 error logging
+    location ~* ^.+\.(ogg|ogv|svg|svgz|mp4|rss|atom|jpg|jpeg|gif|png|ico|zip|tgz|gz|rar|bz2|doc|xls|exe|ppt|tar|mid|midi|wav|bmp|rtf)$ {
+        access_log off;
+        log_not_found off;
+        expires max;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root/$fastcgi_script_name;
+        fastcgi_read_timeout 300;
+    }
+
+    # Only allow fonts to be downloaded if Referer header matches server_name
+    # directive
+    location ~* \.(?:ttf|ttc|otf|eot|woff|woff2)$ {
+        access_log off;
+        log_not_found off;
+        expires max;
+        valid_referers server_names;
+
+        if ($invalid_referer) {
+            return 403;
+        }
+    }
+
+    # Prevent clients from accessing hidden files (starting with a dot)
+    # This is particularly important if you store .htpasswd files in the site hierarchy
+    # Access to `/.well-known/` is allowed.
+    # https://www.mnot.net/blog/2010/04/07/well-known
+    # https://tools.ietf.org/html/rfc5785
+    location ~* /\.(?!well-known\/) {
+        deny all;
+    }
+
+    # Prevent clients from accessing to backup/config/source files
+    location ~* (?:\.(?:bak|conf|dist|fla|in[ci]|log|psd|sh|sql|sw[op])|~)$ {
+        deny all;
+    }
+}

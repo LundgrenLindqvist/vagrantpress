@@ -1,9 +1,7 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-
 Vagrant.configure("2") do |config|
-  # We would prefer to use the official ubuntu/xenial64 box, but it has given us a
-  # lot of grief with SSH authentication failures, so we tried this box instead
+  # We would prefer to use the official ubuntu/xenial64 box, but it has given us
+  # a lot of grief with SSH authentication failures, so we tried this box
+  # instead
   config.vm.box = "bento/ubuntu-16.04"
 
   config.vm.synced_folder ".", "/vagrant", :owner => "www-data"
@@ -16,17 +14,12 @@ Vagrant.configure("2") do |config|
   config.hostsupdater.aliases = %w{www.vagrantpress.test}
   config.hostsupdater.remove_on_suspend = true
 
-  # Allows running commands globally in shell for installed composer libraries
-  config.vm.provision :shell, path: "files/scripts/install-puppet.sh"
+  config.vm.provision :shell, path: "puppet/install-puppet.sh"
 
   config.vm.provision :puppet do |puppet|
-    puppet.environment = "production"
-    puppet.environment_path = "../../"
-
     puppet.manifests_path = "puppet/manifests"
     puppet.module_path = "puppet/modules"
     puppet.manifest_file = "init.pp"
-    # puppet.options = "--verbose --debug"
   end
 
   config.vm.provider :virtualbox do |vb|

@@ -1,5 +1,3 @@
-# Install PHP
-
 class php7::install {
 
     package { [
@@ -12,12 +10,12 @@ class php7::install {
       'php-apcu',
       'php-imagick',
       'php-xdebug'
-    ]:
-    ensure => present
+      ]:
+      ensure => present
     }->
 
     file { '/etc/php/7.0/fpm/php.ini':
-      source => '/vagrant/files/etc/php/7.0/fpm/php.ini',
+      content => template('php7/php.ini'),
     }~>
 
     service { 'php7.0-fpm':
