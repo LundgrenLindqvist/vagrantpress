@@ -1,6 +1,10 @@
 server {
-    listen 80;
+    listen 80 default;
     server_name <%= @web_hostname %> www.<%= @web_hostname %>;
+
+    # Block all IP's except LL IP
+    # allow 80.252.215.138;
+    # deny all;
 
     root <%= @web_root %>;
     index index.php index.html;
@@ -17,6 +21,13 @@ server {
     # See http://stackoverflow.com/a/29588517/618739 for more details
     sendfile off;
     <% end %>
+
+    # Uncomment and update paths to SSL certificate and SSL certificate key to
+    # enable HTTPS. Please remember that you also have to change this server
+    # block to listen on port 443
+    # ssl on;
+    # ssl_certificate /etc/letsencrypt/live/vagrantpress.test/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/vagrantpress.test/privkey.pem;
 
     location / {
         try_files $uri $uri/ /wordpress$uri /index.php?$args;

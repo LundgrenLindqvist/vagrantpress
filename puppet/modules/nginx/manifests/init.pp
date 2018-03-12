@@ -6,13 +6,19 @@ class nginx::install (
 
   package { 'nginx':
     ensure => present,
-  }->
+  }
+
+  file { '/etc/nginx/sites-enabled/default':
+    ensure => absent,
+    require => Package['nginx']
+  }
 
   file { '/etc/nginx/sites-available/vagrantpress.conf':
     content => template('nginx/vagrantpress.conf.erb'),
     owner => 'root',
     group => 'root',
     mode => '0644',
+    require => Package['nginx']
   }->
 
   file { '/etc/nginx/sites-enabled/vagrantpress.conf':
