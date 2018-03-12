@@ -28,6 +28,7 @@ APT::Periodic::Unattended-Upgrade "1";
 END
 
 $web_hostname = lookup('hostname')
+$nginx_root = lookup('nginx_root')
 
 package { [
   'fail2ban',
@@ -91,11 +92,11 @@ mkdir::p { lookup('nginx_root'):
     Class['nginx::install'],
     Class['wordpress'],
     Class['phpmyadmin::install'],
-    File['/var/www/vagrantpress.test/index.php']
+    File["${nginx_root}/index.php"]
   ]
 }
 
-file { '/var/www/vagrantpress.test/index.php':
+file { "${nginx_root}/index.php":
   ensure => file,
   content => inline_template($wp_index_template),
   owner => 'www-data',
