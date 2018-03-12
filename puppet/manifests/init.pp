@@ -163,15 +163,16 @@ file { '/etc/ssh/sshd_config':
 user { 'll':
   ensure => 'present',
   home => '/home/ll',
+  comment => 'Lundgren+Lindqvist',
   groups => 'sudo',
-  password => lookup('ll_password'),
+  password => pw_hash(lookup('ll_password'), 'SHA-512', 'snME3CZ'),
   shell => '/bin/bash',
 }
 
 user { 'www-data':
   ensure => 'present',
   home => '/var/www',
-  password => lookup('www_data_password'),
+  password => pw_hash(lookup('www_data_password'), 'SHA-512', 'CPHsF9v'),
   shell => '/bin/bash',
 }
 

@@ -17,7 +17,7 @@ There's also a Vagrantfile here! That's because these server configuration scrip
 
 1. Deploy a new server with [Linode Manager](https://manager.linode.com)
 2. Use the web console to SSH into the server as root
-3. Run `wget https://github.com/LundgrenLindqvist/vagrantpress/archive/master.zip`
-4. Run `unzip master.zip`
-5. Change the variables in `master/puppet/data/common.yaml` as needed
-6. Run `./master/puppet-apply.sh`
+3. Run `wget https://github.com/LundgrenLindqvist/vagrantpress/archive/master.tar.gz`
+4. Run `tar xzvf master.tar.gz`
+5. Change the variables in `vagrantpress-master/puppet/data/common.yaml` as needed
+6. Run `vagrantpress-master/puppet/puppet-apply.sh`
