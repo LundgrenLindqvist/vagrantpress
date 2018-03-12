@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
   config.hostsupdater.aliases = %w{www.vagrantpress.test}
   config.hostsupdater.remove_on_suspend = true
 
-  config.vm.provision :shell, path: "puppet/install-puppet.sh"
+  config.vm.provision :shell, path: "puppet/development-puppet-install.sh"
 
   config.vm.provision :puppet do |puppet|
     puppet.manifests_path = "puppet/manifests"
