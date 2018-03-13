@@ -147,7 +147,7 @@ class { 'mysql::server':
 class { 'wordpress':
   wp_owner => 'www-data',
   wp_group => 'www-data',
-  db_user => 'wordpress',
+  db_user => lookup('mysql_wordpress_username'),
   db_password => lookup('mysql_wordpress_password'),
   install_dir => lookup('wordpress_root'),
   wp_site_domain => "http://${web_hostname}",

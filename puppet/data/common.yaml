@@ -5,6 +5,7 @@ ll_password: p4ssw0rd
 www_data_password: p4ssw0rd
 mysql_root_password: p4ssw0rd
 mysql_wordpress_password: p4ssw0rd
+mysql_wordpress_username: wordpress
 
 nginx_root: /var/www/vagrantpress.test
 wordpress_root: /var/www/vagrantpress.test/wordpress
