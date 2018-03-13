@@ -13,17 +13,17 @@ class nginx::install (
     require => Package['nginx']
   }
 
-  file { '/etc/nginx/sites-available/vagrantpress.conf':
-    content => template('nginx/vagrantpress.conf.erb'),
+  file { "/etc/nginx/sites-available/${web_hostname}.conf":
+    content => template('nginx/nginx.conf.erb'),
     owner => 'root',
     group => 'root',
     mode => '0644',
     require => Package['nginx']
   }->
 
-  file { '/etc/nginx/sites-enabled/vagrantpress.conf':
+  file { "/etc/nginx/sites-enabled/${web_hostname}.conf":
     ensure => link,
-    target => '/etc/nginx/sites-available/vagrantpress.conf',
+    target => "/etc/nginx/sites-available/${web_hostname}.conf",
     owner => 'root',
     group => 'root',
     mode => '0644',
