@@ -2,6 +2,11 @@
 
 cd "$(dirname "$0")"
 
+if [ "$EUID" -ne 0 ]; then
+  echo "Please run as root"
+  exit
+fi
+
 if [ ! -e puppet-release-xenial.deb ]; then
   wget -q http://apt.puppetlabs.com/puppet-release-xenial.deb
   dpkg -i puppet-release-xenial.deb
