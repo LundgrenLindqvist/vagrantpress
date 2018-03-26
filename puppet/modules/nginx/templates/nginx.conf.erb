@@ -20,6 +20,8 @@ server {
     # This fixes a bug in VirtualBox related to sendfile that can corrupt files.
     # See http://stackoverflow.com/a/29588517/618739 for more details
     sendfile off;
+    <% else %>
+    sendfile on;
     <% end %>
 
     # Uncomment and update paths to SSL certificate and SSL certificate key to
