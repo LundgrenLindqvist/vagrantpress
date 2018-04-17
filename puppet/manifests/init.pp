@@ -31,6 +31,7 @@ $web_hostname = lookup('hostname')
 $nginx_root = lookup('nginx_root')
 
 package { [
+  'bash-completion',
   'fail2ban',
   'git',
   'sendmail',
