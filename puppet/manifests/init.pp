@@ -32,11 +32,13 @@ $nginx_root = lookup('nginx_root')
 
 package { [
   'bash-completion',
+  'curl',
   'fail2ban',
   'git',
   'sendmail',
   'ufw',
   'unattended-upgrades',
+  'wget'
   ]:
   ensure => present
 }
@@ -153,6 +155,20 @@ class { 'wordpress':
   install_dir => lookup('wordpress_root'),
   wp_site_domain => "http://${web_hostname}",
   version => lookup('wordpress_version')
+}
+
+exec { 'download-wp-cli':
+  command => "/usr/bin/curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > /usr/local/bin/wp",
+  group => 'root',
+  user => 'root',
+  creates => '/usr/local/bin/wp'
+}->
+
+file { '/usr/local/bin/wp':
+  ensure => present,
+  owner => 'root',
+  group => 'root',
+  mode => '0755',
 }
 
 class { 'phpmyadmin::install':
