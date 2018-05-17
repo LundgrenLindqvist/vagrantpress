@@ -2,9 +2,10 @@
 
 cd /tmp
 
-if [ ! -e puppet-release-xenial.deb ]; then
+if ! [ -x "$(command -v puppet)" ]; then
   wget -q http://apt.puppetlabs.com/puppet-release-xenial.deb
   dpkg -i puppet-release-xenial.deb
+  rm puppet-release-xenial.deb
   apt-get update >/dev/null
   apt-get -qy install puppet-agent
 fi
