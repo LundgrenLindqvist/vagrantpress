@@ -1,3 +1,23 @@
+# This server block is an example of how to redirect from non-HTTPS traffic to a
+# HTTPS enabled server block, or how to redirect eg. from example.com to
+# www.example.com. This is optional, so remove it if it doesn't apply to your
+# use case.
+# server {
+#     listen 80;
+#
+#     server_name <%= @web_hostname %> www.<%= @web_hostname %>;
+#
+#     # This location block enables support for Let's Encrypt on the non-HTTPS
+#     # domain
+#     location /.well-known {
+#         root <%= @web_root %>;
+#     }
+#
+#     location / {
+#         return 301 https://www.<%= @web_hostname %>$request_uri;
+#     }
+# }
+
 server {
     listen 80 default;
     server_name <%= @web_hostname %> www.<%= @web_hostname %>;
