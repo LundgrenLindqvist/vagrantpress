@@ -30,6 +30,12 @@ END
 $web_hostname = lookup('hostname')
 $nginx_root = lookup('nginx_root')
 
+if $web_hostname =~ /^\w+\.test/ {
+  $is_dev_env = true
+} else {
+  $is_dev_env = false
+}
+
 package { [
   'bash-completion',
   'curl',
@@ -109,7 +115,7 @@ file { "${nginx_root}/index.php":
 class { 'nginx::install':
   web_hostname => $web_hostname,
   web_root => lookup('nginx_root'),
-  no_sendfile => true
+  is_dev_env => $is_dev_env
 }
 
 package { [

@@ -1,7 +1,7 @@
 class nginx::install (
   $web_hostname = 'vagrantpress.test',
   $web_root = '/var/www',
-  $no_sendfile = false
+  $is_dev_env = true
 ) {
 
   package { 'nginx':
