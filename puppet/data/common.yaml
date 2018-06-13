@@ -11,5 +11,9 @@ nginx_root: /var/www/vagrantpress.test/public_html
 wordpress_root: /var/www/vagrantpress.test/public_html/wordpress
 phpmyadmin_root: /var/www/vagrantpress.test/public_html/phpmyadmin
 
+# nginx_root: /vagrant/public_html
+# wordpress_root: /vagrant/public_html/wordpress
+# phpmyadmin_root: /vagrant/public_html/phpmyadmin
+
 wordpress_version: 4.9.4
 phpmyadmin_version: 4.7.9

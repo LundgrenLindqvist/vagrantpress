@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.synced_folder ".", "/vagrant", :owner => "www-data", :group => "www-data", :mount_options => ["dmode=755,fmode=644"]
   # Use this line as a template for syncing the theme directory
-  # config.vm.synced_folder "/Users/fredrik/Documents/GitHub/lundgrenlindqvist/theme/public", "/var/www/vagrantpress.test/public_html/wordpress/wp-content/themes/lundgrenlindqvist", :owner => "www-data", :group => "www-data", :mount_options => ["dmode=755,fmode=644"]
+  # config.vm.synced_folder "/Users/fredrik/Documents/GitHub/lundgrenlindqvist/theme/public", "/vagrant/public_html/wordpress/wp-content/themes/lundgrenlindqvist", :owner => "www-data", :group => "www-data", :mount_options => ["dmode=755,fmode=644"]
 
   # Setup virtual hostname and provision local IP
   config.vm.hostname = hostname
