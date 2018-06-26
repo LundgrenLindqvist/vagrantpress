@@ -29,6 +29,13 @@ END
 
 $web_hostname = lookup('hostname')
 $nginx_root = lookup('nginx_root')
+$wordpress_root = lookup('wordpress_root')
+
+$wp_admin_user = lookup('wp_admin_user')
+$wp_admin_email = lookup('wp_admin_email')
+$wp_admin_password = lookup('wp_admin_password')
+$wp_site_title = lookup('wp_site_title')
+$wp_plugins = lookup('wp_plugins')
 
 if $web_hostname =~ /^\w+\.test/ {
   $is_dev_env = true
@@ -151,14 +158,14 @@ service { 'php7.0-fpm':
 class { 'mysql::server':
   root_password => lookup('mysql_root_password'),
   remove_default_accounts => true
-}
+}->
 
 class { 'wordpress':
   wp_owner => 'www-data',
   wp_group => 'www-data',
   db_user => lookup('mysql_wordpress_username'),
   db_password => lookup('mysql_wordpress_password'),
-  install_dir => lookup('wordpress_root'),
+  install_dir => $wordpress_root,
   wp_site_domain => "http://${web_hostname}",
   version => lookup('wordpress_version')
 }
@@ -167,7 +174,8 @@ exec { 'download-wp-cli':
   command => "/usr/bin/curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > /usr/local/bin/wp",
   group => 'root',
   user => 'root',
-  creates => '/usr/local/bin/wp'
+  creates => '/usr/local/bin/wp',
+  require => Class['wordpress']
 }->
 
 file { '/usr/local/bin/wp':
@@ -175,6 +183,42 @@ file { '/usr/local/bin/wp':
   owner => 'root',
   group => 'root',
   mode => '0755',
+}->
+
+exec { 'install-wp':
+  command => "echo '${wp_admin_password}' | wp core install --url=http://${web_hostname} --title=${wp_site_title} --admin_user=${wp_admin_user} --admin_email=${wp_admin_email} --prompt=admin_password",
+  path => ['/bin', '/usr/bin', '/usr/local/bin'],
+  cwd => $wordpress_root,
+  group => 'www-data',
+  user => 'www-data',
+}->
+
+exec { 'update-wp-siteurl':
+  command => "/usr/local/bin/wp option update siteurl http://${web_hostname}/wordpress",
+  cwd => $wordpress_root,
+  group => 'www-data',
+  user => 'www-data',
+}->
+
+# Remove default Akismet plugin
+file { "$wordpress_root/wp-content/plugins/akismet":
+  ensure => absent,
+  force => true
+}
+
+# Remove default Hello Dolly plugin
+file { "$wordpress_root/wp-content/plugins/hello.php":
+  ensure => absent,
+}
+
+$wp_plugins.each |$plugin, $target| {
+  exec { "install-${plugin}":
+    command => "/usr/local/bin/wp plugin install '${target}'",
+    cwd => $wordpress_root,
+    creates => "${wordpress_root}/wp-content/plugins/${plugin}",
+    group => 'www-data',
+    user => 'www-data',
+  }
 }
 
 class { 'phpmyadmin::install':

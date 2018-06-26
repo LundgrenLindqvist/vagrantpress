@@ -3,6 +3,7 @@
 latest.tar.gz
 ./wordpress/
 /wordpress/
+/public_html/
 /phpMyAdmin*
 /puppet/modules/*
 !/puppet/modules/nginx
