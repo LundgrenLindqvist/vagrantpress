@@ -94,6 +94,9 @@ server {
     # }
     #
     # location @production {
+    #     # If the remove site isn't hosting WordPress in the /wordpress
+    #     # subcatalog, then uncomment the following line
+    #     # rewrite ^/wordpress(.*$) $1 break;
     #     proxy_pass http://example.com;
     # }
     <% end %>
