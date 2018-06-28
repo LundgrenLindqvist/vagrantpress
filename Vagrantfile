@@ -2,6 +2,11 @@ require "yaml"
 
 hiera_data = YAML.load_file("puppet/data/common.yaml")
 hostname = hiera_data["hostname"]
+ip_slot4 = rand(255)
+
+while ip_slot4 == 1
+  ip_slot4 = rand(255)
+end
 
 Vagrant.configure("2") do |config|
   # We would prefer to use the official ubuntu/xenial64 box, but it has given us
@@ -15,7 +20,7 @@ Vagrant.configure("2") do |config|
 
   # Setup virtual hostname and provision local IP
   config.vm.hostname = hostname
-  config.vm.network :private_network, :ip => "192.168.50.4"
+  config.vm.network :private_network, :ip => "192.168.50.#{ip_slot4}"
   config.hostsupdater.aliases = ["www.#{hostname}"]
   config.hostsupdater.remove_on_suspend = true
 
