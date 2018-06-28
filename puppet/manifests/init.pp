@@ -186,7 +186,7 @@ file { '/usr/local/bin/wp':
 }->
 
 exec { 'install-wp':
-  command => "echo '${wp_admin_password}' | wp core install --url=http://${web_hostname} --title=${wp_site_title} --admin_user=${wp_admin_user} --admin_email=${wp_admin_email} --prompt=admin_password",
+  command => "echo '${wp_admin_password}' | wp core install --url=http://${web_hostname} --title='${wp_site_title}' --admin_user='${wp_admin_user}' --admin_email=${wp_admin_email} --prompt=admin_password",
   path => ['/bin', '/usr/bin', '/usr/local/bin'],
   cwd => $wordpress_root,
   group => 'www-data',
