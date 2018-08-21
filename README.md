@@ -27,4 +27,4 @@ There's also a Vagrantfile here! That's because these server configuration scrip
 
 ## Acknowledgments
 
-This repo started as a fork of [Vagrantpress](https://github.com/vagrantpress/vagrantpress/). We've changed pretty much every aspect of it since then, but we still owe some gratitude to the original authors for getting us off the ground.
+This repo started as a fork of [Vagrantpress](https://github.com/vagrantpress/vagrantpress/). We've changed pretty much every aspect of it since then, but we still owe some gratitude to the original authors for getting us off the ground. Thank you [Chad Thompson](https://chadthompson.me/), and fellow contributors!
