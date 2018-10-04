@@ -85,6 +85,14 @@ file_line { 'ssh_no_root_login':
   match => '^PermitRootLogin',
 }
 
+# This is a good one! sendmail wants to send from a FQDN (fully qualified domain
+# name) because otherwise it takes up to 1 minute to send a single email.
+# "localhost" isn't a FQDN, but "localhost.localdomain" is. That domain name
+# isn't in /etc/hosts by default, so we add it.
+host { 'localhost.localdomain':
+  ip => '127.0.0.1',
+}
+
 user { 'll':
   ensure => 'present',
   home => '/home/ll',
