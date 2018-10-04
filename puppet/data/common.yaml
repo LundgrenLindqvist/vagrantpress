@@ -1,5 +1,9 @@
 ---
+# hostname should always be a fully qualified domain name (eg. example.com) and
+# not an IP address. If the server doesn't have an associated domain name, set
+# wp_url to the appropriate IP address, eg "http://192.168.0.1"
 hostname: vagrantpress.test
+wp_url: http://vagrantpress.test
 wp_site_title: Vagrantpress
 
 ll_password: p4ssw0rd
