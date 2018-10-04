@@ -147,6 +147,31 @@ package { [
   ensure => present
 } ->
 
+# These three directives are meant to configure php-fpm to be more crash
+# tolerant. They are taken from the nexamchemical.com project, where php-fpm
+# experienced frequent crashes due to the fact that a particular page was being
+# crawled by a bot. That page occasionally threw errors, and the combination of
+# the bot requests and PHP errors seemed to cause php-fpm to crash completely.
+# These directives help php-fpm realize that it should restart the crashed
+# processes in similar situations.
+file_line { 'php_fpm_emergency_restart_threshold':
+  path => '/etc/php/7.0/fpm/php-fpm.conf',
+  line => 'emergency_restart_threshold = 3',
+  match => 'emergency_restart_threshold =',
+} ->
+
+file_line { 'php_fpm_emergency_restart_interval':
+  path => '/etc/php/7.0/fpm/php-fpm.conf',
+  line => 'emergency_restart_interval = 1m',
+  match => 'emergency_restart_interval =',
+} ->
+
+file_line { 'php_fpm_process_control_timeout':
+  path => '/etc/php/7.0/fpm/php-fpm.conf',
+  line => 'process_control_timeout = 5s',
+  match => 'process_control_timeout =',
+} ->
+
 file_line { 'php_upload_max_filesize':
   path => '/etc/php/7.0/fpm/php.ini',
   line => 'upload_max_filesize = 200M',
