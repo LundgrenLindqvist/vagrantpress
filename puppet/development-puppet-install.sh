@@ -13,7 +13,7 @@ fi
 export PATH=/opt/puppetlabs/bin:$PATH
 
 if [ ! -d /vagrant/puppet/modules/stdlib ]; then
-  puppet module install puppetlabs-stdlib --target-dir /vagrant/puppet/modules --version 4.24.0
+  puppet module install puppetlabs-stdlib --target-dir /vagrant/puppet/modules --version 4.25.1
 fi
 
 if [ ! -d /vagrant/puppet/modules/mkdir ]; then
@@ -25,5 +25,5 @@ if [ ! -d /vagrant/puppet/modules/wordpress ]; then
 fi
 
 if [ ! -d /vagrant/puppet/modules/mysql ]; then
-  puppet module install puppetlabs-mysql --target-dir /vagrant/puppet/modules --version 5.3.0
+  puppet module install puppetlabs-mysql --target-dir /vagrant/puppet/modules --version 6.2.0
 fi
