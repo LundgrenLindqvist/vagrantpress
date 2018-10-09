@@ -78,12 +78,20 @@ exec { 'ufw-enable':
 file { '/etc/apt/apt.conf.d/10periodic':
   ensure => file,
   content => inline_template($unattended_upgrades_template),
+} ~>
+
+service { 'unattended-upgrades':
+  ensure => running,
 }
 
 file_line { 'ssh_no_root_login':
   path => '/etc/ssh/sshd_config',
   line => 'PermitRootLogin no',
   match => '^PermitRootLogin',
+} ~>
+
+service { 'ssh':
+  ensure => running,
 }
 
 # This is a good one! sendmail wants to send from a FQDN (fully qualified domain
