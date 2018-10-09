@@ -29,6 +29,7 @@ END
 
 $web_hostname = lookup('hostname')
 $nginx_root = lookup('nginx_root')
+$log_dir = lookup('log_dir')
 $wordpress_root = lookup('wordpress_root')
 
 $wp_url = lookup('wp_url')
@@ -118,7 +119,7 @@ user { 'www-data':
   shell => '/bin/bash',
 }
 
-mkdir::p { lookup('nginx_root'):
+mkdir::p { "${nginx_root}":
   owner => 'www-data',
   group => 'www-data',
   before => [
@@ -126,6 +127,15 @@ mkdir::p { lookup('nginx_root'):
     Class['wordpress'],
     Class['phpmyadmin::install'],
     File["${nginx_root}/index.php"]
+  ]
+}
+
+mkdir::p { "${log_dir}":
+  owner => 'www-data',
+  group => 'www-data',
+  before => [
+    Class['nginx::install'],
+    Logrotate::Rule["${web_hostname}"]
   ]
 }
 
@@ -138,8 +148,28 @@ file { "${nginx_root}/index.php":
 
 class { 'nginx::install':
   web_hostname => $web_hostname,
-  web_root => lookup('nginx_root'),
+  web_root => $nginx_root,
+  log_dir => $log_dir,
   is_dev_env => $is_dev_env
+} ->
+
+logrotate::rule { "${web_hostname}":
+  path => "${log_dir}/*.log",
+  create => true,
+  create_group => 'www-data',
+  create_mode => '0640',
+  create_owner => 'www-data',
+  delaycompress => true,
+  ifempty => false,
+  missingok => true,
+  rotate => 14,
+  rotate_every => 'day',
+  sharedscripts => true,
+  prerotate =>
+    'if [ -d /etc/logrotate.d/httpd-prerotate ]; then \
+      run-parts /etc/logrotate.d/httpd-prerotate; \
+    fi',
+  postrotate => '[ ! -f /var/run/nginx.pid ] || kill -USR1 `cat /var/run/nginx.pid`',
 }
 
 package { [

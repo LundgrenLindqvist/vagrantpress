@@ -1,6 +1,7 @@
 class nginx::install (
   $web_hostname = 'vagrantpress.test',
-  $web_root = '/var/www',
+  $web_root = '/var/www/vagrantpress.test/public_html',
+  $log_dir = '/var/www/vagrantpress.test/logs',
   $is_dev_env = true
 ) {
 

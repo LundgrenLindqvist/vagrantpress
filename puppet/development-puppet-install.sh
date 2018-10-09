@@ -27,3 +27,7 @@ fi
 if [ ! -d /vagrant/puppet/modules/mysql ]; then
   puppet module install puppetlabs-mysql --target-dir /vagrant/puppet/modules --version 6.2.0
 fi
+
+if [ ! -d /vagrant/puppet/modules/logrotate ]; then
+  puppet module install puppet-logrotate --target-dir /vagrant/puppet/modules --version 3.4.0
+fi

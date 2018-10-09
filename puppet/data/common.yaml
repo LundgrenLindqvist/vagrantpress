@@ -17,10 +17,12 @@ wp_admin_email: development@lundgrenlindqvist.se
 wp_admin_password: p4ssw0rd
 
 nginx_root: /var/www/vagrantpress.test/public_html
+log_dir: /var/www/vagrantpress.test/logs
 wordpress_root: /var/www/vagrantpress.test/public_html/wordpress
 phpmyadmin_root: /var/www/vagrantpress.test/public_html/phpmyadmin
 
 # nginx_root: /vagrant/public_html
+# log_dir: /vagrant/logs
 # wordpress_root: /vagrant/public_html/wordpress
 # phpmyadmin_root: /vagrant/public_html/phpmyadmin
 
