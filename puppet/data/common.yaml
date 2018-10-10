@@ -33,4 +33,5 @@ wp_plugins:
   # REMEMBER: Update the k=example query string property in the ACF URL to your
   # ACF Pro license key
   advanced-custom-fields-pro: https://connect.advancedcustomfields.com/index.php?a=download&p=pro&k=example
+  query-monitor: query-monitor
   wp-optimize: wp-optimize
