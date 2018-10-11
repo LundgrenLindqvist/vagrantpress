@@ -106,6 +106,7 @@ host { 'localhost.localdomain':
 user { 'll':
   ensure => 'present',
   home => '/home/ll',
+  managehome => true,
   comment => 'Lundgren+Lindqvist',
   groups => 'sudo',
   password => pw_hash(lookup('ll_password'), 'SHA-512', 'snME3CZ'),
@@ -115,6 +116,7 @@ user { 'll':
 user { 'www-data':
   ensure => 'present',
   home => '/var/www',
+  managehome => true,
   password => pw_hash(lookup('www_data_password'), 'SHA-512', 'CPHsF9v'),
   shell => '/bin/bash',
 }
