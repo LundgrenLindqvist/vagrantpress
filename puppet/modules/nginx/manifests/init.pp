@@ -5,6 +5,12 @@ class nginx::install (
   $is_dev_env = true
 ) {
 
+  if $facts['os']['distro']['codename'] == 'xenial' {
+    $php_socket = 'unix:/run/php/php7.0-fpm.sock'
+  } elsif $facts['os']['distro']['codename'] == 'bionic' {
+    $php_socket = 'unix:/run/php/php7.2-fpm.sock'
+  }
+
   package { 'nginx':
     ensure => present,
   }
@@ -20,7 +26,7 @@ class nginx::install (
     group => 'root',
     mode => '0644',
     require => Package['nginx']
-  }->
+  } ~>
 
   file { "/etc/nginx/sites-enabled/${web_hostname}.conf":
     ensure => link,
@@ -28,7 +34,7 @@ class nginx::install (
     owner => 'root',
     group => 'root',
     mode => '0644',
-  }~>
+  } ~>
 
   service { 'nginx':
     ensure => running,

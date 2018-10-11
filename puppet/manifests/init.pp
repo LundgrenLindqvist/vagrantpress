@@ -172,13 +172,19 @@ logrotate::rule { "${web_hostname}":
   postrotate => '[ ! -f /var/run/nginx.pid ] || kill -USR1 `cat /var/run/nginx.pid`',
 }
 
+if $facts['os']['distro']['codename'] == 'xenial' {
+  $php_version = '7.0'
+} elsif $facts['os']['distro']['codename'] == 'bionic' {
+  $php_version = '7.2'
+}
+
 package { [
-  'php7.0-fpm',
-  'php7.0-gd',
-  'php7.0-cli',
-  'php7.0-curl',
-  'php7.0-mbstring',
-  'php7.0-mysql',
+  "php${php_version}-fpm",
+  "php${php_version}-gd",
+  "php${php_version}-cli",
+  "php${php_version}-curl",
+  "php${php_version}-mbstring",
+  "php${php_version}-mysql",
   'php-apcu',
   'php-imagick',
   'php-xdebug'
@@ -194,36 +200,36 @@ package { [
 # These directives help php-fpm realize that it should restart the crashed
 # processes in similar situations.
 file_line { 'php_fpm_emergency_restart_threshold':
-  path => '/etc/php/7.0/fpm/php-fpm.conf',
+  path => "/etc/php/${php_version}/fpm/php-fpm.conf",
   line => 'emergency_restart_threshold = 3',
   match => 'emergency_restart_threshold =',
 } ->
 
 file_line { 'php_fpm_emergency_restart_interval':
-  path => '/etc/php/7.0/fpm/php-fpm.conf',
+  path => "/etc/php/${php_version}/fpm/php-fpm.conf",
   line => 'emergency_restart_interval = 1m',
   match => 'emergency_restart_interval =',
 } ->
 
 file_line { 'php_fpm_process_control_timeout':
-  path => '/etc/php/7.0/fpm/php-fpm.conf',
+  path => "/etc/php/${php_version}/fpm/php-fpm.conf",
   line => 'process_control_timeout = 5s',
   match => 'process_control_timeout =',
 } ->
 
 file_line { 'php_upload_max_filesize':
-  path => '/etc/php/7.0/fpm/php.ini',
+  path => "/etc/php/${php_version}/fpm/php.ini",
   line => 'upload_max_filesize = 200M',
   match => '^upload_max_filesize',
 } ->
 
 file_line { 'php_post_max_size':
-  path => '/etc/php/7.0/fpm/php.ini',
+  path => "/etc/php/${php_version}/fpm/php.ini",
   line => 'post_max_size = 200M',
   match => '^post_max_size',
 } ~>
 
-service { 'php7.0-fpm':
+service { "php$php_version-fpm":
   ensure => running,
 }
 
