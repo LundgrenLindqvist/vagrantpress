@@ -79,6 +79,12 @@ exec { 'ufw-enable':
 file { '/etc/apt/apt.conf.d/10periodic':
   ensure => file,
   content => inline_template($unattended_upgrades_template),
+} ->
+
+file_line { 'unattended_upgrades_autoremove':
+  path => '/etc/apt/apt.conf.d/50unattended-upgrades',
+  line => 'Unattended-Upgrade::Remove-Unused-Dependencies "true";',
+  match => '^Remove-Unused-Dependencies',
 } ~>
 
 service { 'unattended-upgrades':
