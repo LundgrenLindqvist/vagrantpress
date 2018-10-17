@@ -280,7 +280,7 @@ exec { 'install-wp':
 }->
 
 exec { 'update-wp-siteurl':
-  command => "/usr/local/bin/wp option update siteurl http://${wp_url}/wordpress",
+  command => "/usr/local/bin/wp option update siteurl ${wp_url}/wordpress",
   cwd => $wordpress_root,
   group => 'www-data',
   user => 'www-data',
