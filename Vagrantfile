@@ -1,5 +1,11 @@
 require "yaml"
 
+# To the best of our knowledge, there is nothing in our configuration that is
+# only supported in Vagrant ^2, but given that we've run into compatibility
+# issues with macOS High Sierra and earlier versions of Vagrant, this line is
+# here to help us bail early if necessary
+Vagrant.require_version ">= 2.0.0"
+
 hiera_data = YAML.load_file("puppet/data/common.yaml")
 hostname = hiera_data["hostname"]
 ip_slot4 = rand(255)
