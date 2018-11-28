@@ -26,6 +26,8 @@ phpmyadmin_root: /var/www/vagrantpress.test/public_html/phpmyadmin
 # wordpress_root: /vagrant/public_html/wordpress
 # phpmyadmin_root: /vagrant/public_html/phpmyadmin
 
+fail2ban_whitelist_ip: 80.252.215.138
+
 wordpress_version: 4.9.6
 phpmyadmin_version: 4.8.2
 

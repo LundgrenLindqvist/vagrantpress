@@ -31,6 +31,7 @@ $web_hostname = lookup('hostname')
 $nginx_root = lookup('nginx_root')
 $log_dir = lookup('log_dir')
 $wordpress_root = lookup('wordpress_root')
+$fail2ban_whitelist_ip = lookup('fail2ban_whitelist_ip')
 
 $wp_url = lookup('wp_url')
 $wp_admin_user = lookup('wp_admin_user')
@@ -98,6 +99,16 @@ file_line { 'ssh_no_root_login':
 } ~>
 
 service { 'ssh':
+  ensure => running,
+}
+
+file_line { 'fail2ban_whitelist':
+  path => '/etc/fail2ban/jail.conf',
+  line => "ignoreip = 127.0.0.1/8 ::1 ${fail2ban_whitelist_ip}",
+  match => '^#?ignoreip =',
+} ~>
+
+service { 'fail2ban':
   ensure => running,
 }
 
