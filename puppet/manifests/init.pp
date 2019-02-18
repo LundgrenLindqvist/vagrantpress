@@ -191,6 +191,23 @@ logrotate::rule { "${web_hostname}":
   postrotate => '[ ! -f /var/run/nginx.pid ] || kill -USR1 `cat /var/run/nginx.pid`',
 }
 
+# When we run in a Vagrant environment, we need to wait for Vagrant to finish
+# mounting the shared folders before starting nginx. Why? Because nginx will
+# protest when the log directories aren't present otherwise
+if $is_dev_env {
+  file { '/etc/systemd/system/nginx.service':
+    ensure => present,
+    source => '/lib/systemd/system/nginx.service',
+    require => Class['nginx::install']
+  } ->
+
+  file_line { 'systemctl_nginx_vagrant':
+    path => '/etc/systemd/system/nginx.service',
+    line => 'WantedBy=vagrant.mount',
+    match => '^WantedBy=',
+  }
+}
+
 if $facts['os']['distro']['codename'] == 'xenial' {
   $php_version = '7.0'
 } elsif $facts['os']['distro']['codename'] == 'bionic' {
