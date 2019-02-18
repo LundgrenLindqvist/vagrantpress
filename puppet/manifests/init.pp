@@ -40,7 +40,7 @@ $wp_admin_password = lookup('wp_admin_password')
 $wp_site_title = lookup('wp_site_title')
 $wp_plugins = lookup('wp_plugins')
 
-if $web_hostname =~ /^\w+\.test/ {
+if $web_hostname =~ /\.test$/ {
   $is_dev_env = true
 } else {
   $is_dev_env = false
@@ -221,6 +221,7 @@ package { [
   "php${php_version}-curl",
   "php${php_version}-mbstring",
   "php${php_version}-mysql",
+  "php${php_version}-zip",
   'php-apcu',
   'php-imagick',
   'php-xdebug'
