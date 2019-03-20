@@ -205,6 +205,11 @@ if $is_dev_env {
     path => '/etc/systemd/system/nginx.service',
     line => 'WantedBy=vagrant.mount',
     match => '^WantedBy=',
+  } ~>
+
+  exec { 'nginx_systemd_reenable':
+    command => '/bin/systemctl reenable nginx',
+    refreshonly => true
   }
 }
 
