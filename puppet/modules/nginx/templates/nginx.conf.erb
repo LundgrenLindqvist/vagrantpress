@@ -132,6 +132,7 @@ server {
     # Only allow fonts to be downloaded if Referer header matches server_name
     # directive
     location ~* \.(?:ttf|ttc|otf|eot|woff|woff2)$ {
+        try_files $uri $uri/ /wordpress$uri /index.php?$args;
         access_log off;
         log_not_found off;
         expires max;
