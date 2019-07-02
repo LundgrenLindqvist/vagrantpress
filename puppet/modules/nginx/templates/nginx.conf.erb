@@ -3,8 +3,7 @@
 # www.example.com. This is optional, so remove it if it doesn't apply to your
 # use case.
 # server {
-#     listen 80;
-#
+#     listen 80 default_server;
 #     server_name <%= @web_hostname %> www.<%= @web_hostname %>;
 #
 #     # This location block enables support for Let's Encrypt on the non-HTTPS
@@ -19,7 +18,8 @@
 # }
 
 server {
-    listen 80 default;
+    # listen 443 ssl http2;
+    listen 80 default_server;
     server_name <%= @web_hostname %> www.<%= @web_hostname %>;
 
     # Block all IP's except LL IP
