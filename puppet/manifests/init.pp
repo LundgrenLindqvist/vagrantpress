@@ -219,7 +219,7 @@ if $facts['os']['distro']['codename'] == 'xenial' {
   $php_version = '7.2'
 }
 
-package { [
+$production_php_packages = [
   "php${php_version}-fpm",
   "php${php_version}-gd",
   "php${php_version}-cli",
@@ -228,9 +228,16 @@ package { [
   "php${php_version}-mysql",
   "php${php_version}-zip",
   'php-apcu',
-  'php-imagick',
-  'php-xdebug'
-  ]:
+  'php-imagick'
+]
+
+if $is_dev_env {
+  $php_packages = $production_php_packages << 'php-xdebug'
+} else {
+  $php_packages = $production_php_packages
+}
+
+package { $php_packages:
   ensure => present
 } ->
 
