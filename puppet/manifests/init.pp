@@ -224,6 +224,7 @@ $production_php_packages = [
   "php${php_version}-gd",
   "php${php_version}-cli",
   "php${php_version}-curl",
+  "php${php_version}-intl",
   "php${php_version}-mbstring",
   "php${php_version}-mysql",
   "php${php_version}-xml",
