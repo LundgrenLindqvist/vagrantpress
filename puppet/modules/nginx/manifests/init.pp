@@ -9,6 +9,8 @@ class nginx::install (
     $php_socket = 'unix:/run/php/php7.0-fpm.sock'
   } elsif $facts['os']['distro']['codename'] == 'bionic' {
     $php_socket = 'unix:/run/php/php7.2-fpm.sock'
+  } elsif $facts['os']['distro']['codename'] == 'focal' {
+    $php_socket = 'unix:/run/php/php7.4-fpm.sock'
   }
 
   package { 'nginx':

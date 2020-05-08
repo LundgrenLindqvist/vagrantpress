@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
   # We would prefer to use the official ubuntu/xenial64 box, but it has given us
   # a lot of grief with SSH authentication failures, so we tried this box
   # instead
-  config.vm.box = "bento/ubuntu-18.04"
+  config.vm.box = "bento/ubuntu-20.04"
 
   config.vm.synced_folder ".", "/vagrant", :owner => "www-data", :group => "www-data", :mount_options => ["dmode=755,fmode=644"]
   # Use this line as a template for syncing the theme directory

@@ -217,6 +217,8 @@ if $facts['os']['distro']['codename'] == 'xenial' {
   $php_version = '7.0'
 } elsif $facts['os']['distro']['codename'] == 'bionic' {
   $php_version = '7.2'
+} elsif $facts['os']['distro']['codename'] == 'focal' {
+  $php_version = '7.4'
 }
 
 $production_php_packages = [
