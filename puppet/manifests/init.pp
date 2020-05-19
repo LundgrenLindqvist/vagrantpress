@@ -27,6 +27,11 @@ APT::Periodic::AutocleanInterval "7";
 APT::Periodic::Unattended-Upgrade "1";
 END
 
+$certbot_renewal_hook_template = @(END)
+#!/bin/bash
+systemctl reload nginx
+END
+
 $web_hostname = lookup('hostname')
 $nginx_root = lookup('nginx_root')
 $log_dir = lookup('log_dir')
@@ -48,6 +53,7 @@ if $web_hostname =~ /\.test$/ {
 
 package { [
   'bash-completion',
+  'certbot',
   'curl',
   'fail2ban',
   'git',
@@ -357,4 +363,17 @@ class { 'phpmyadmin::install':
   install_dir => lookup('phpmyadmin_root'),
   owner => 'www-data',
   group => 'www-data'
+}
+
+mkdir::p { '/etc/letsencrypt/renewal-hooks/post':
+  owner => 'root',
+  group => 'root',
+}->
+
+file { '/etc/letsencrypt/renewal-hooks/post/nginx.sh':
+  ensure => file,
+  content => inline_template($certbot_renewal_hook_template),
+  owner => 'root',
+  group => 'root',
+  mode => '0775',
 }
