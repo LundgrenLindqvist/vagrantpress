@@ -4,6 +4,7 @@ This repository contains [Puppet](https://puppet.com/) scripts for setting up a 
 
 - Ubuntu 16.04 (Xenial Xerus)
 - Ubuntu 18.04 (Bionic Beaver)
+- Ubuntu 20.04 (Focal Fossa)
 
 There's also a Vagrantfile here! That's because these server configuration scripts grew out of our fork of [vagrantpress](https://github.com/vagrantpress/vagrantpress). Now, we use the same server deployment scripts for production and development environments, so it makes sense to keep it all in one place.
 
