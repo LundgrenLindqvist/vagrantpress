@@ -293,8 +293,18 @@ service { "php$php_version-fpm":
 }
 
 class { 'mysql::server':
+  package_name => 'mariadb-server',
   root_password => lookup('mysql_root_password'),
-  remove_default_accounts => true
+  remove_default_accounts => true,
+  override_options => {
+    mysqld => {
+      'log-error' => '/var/log/mysql/mariadb.log',
+      'pid-file'  => '/var/run/mysqld/mysqld.pid',
+    },
+    mysqld_safe => {
+      'log-error' => '/var/log/mysql/mariadb.log',
+    },
+  },
 }->
 
 class { 'wordpress':
