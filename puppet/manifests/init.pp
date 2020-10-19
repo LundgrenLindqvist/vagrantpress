@@ -245,11 +245,13 @@ $production_php_packages = [
   'php-imagick'
 ]
 
-if $is_dev_env {
-  $php_packages = $production_php_packages << 'php-xdebug'
-} else {
-  $php_packages = $production_php_packages
-}
+# Don't install xdebug even in a development environment, because it simply
+# wrecks performance
+# if $is_dev_env {
+#   $php_packages = $production_php_packages << 'php-xdebug'
+# } else {
+#   $php_packages = $production_php_packages
+# }
 
 package { $php_packages:
   ensure => present
