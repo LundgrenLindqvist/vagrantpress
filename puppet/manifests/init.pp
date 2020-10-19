@@ -38,6 +38,10 @@ $log_dir = lookup('log_dir')
 $wordpress_root = lookup('wordpress_root')
 $fail2ban_whitelist_ip = lookup('fail2ban_whitelist_ip')
 
+$opcache_blacklist_template = @(END)
+${wordpress_root}/wp-content/themes/**/*
+END
+
 $wp_url = lookup('wp_url')
 $wp_admin_user = lookup('wp_admin_user')
 $wp_admin_email = lookup('wp_admin_email')
@@ -251,6 +255,16 @@ package { $php_packages:
   ensure => present
 } ->
 
+$opcache_blacklist_path = "/etc/php/${php_version}/fpm/opcache_blacklist.txt";
+
+file { $opcache_blacklist_path:
+  ensure => file,
+  content => inline_template($opcache_blacklist_template),
+  owner => 'root',
+  group => 'root',
+  mode => '0775',
+} ->
+
 # These three directives are meant to configure php-fpm to be more crash
 # tolerant. They are taken from the nexamchemical.com project, where php-fpm
 # experienced frequent crashes due to the fact that a particular page was being
@@ -280,6 +294,24 @@ file_line { 'php_upload_max_filesize':
   path => "/etc/php/${php_version}/fpm/php.ini",
   line => 'upload_max_filesize = 200M',
   match => '^upload_max_filesize',
+} ->
+
+file_line { 'php_opcache_blacklist_filename':
+  path => "/etc/php/${php_version}/fpm/php.ini",
+  line => "opcache.blacklist_filename=${opcache_blacklist_path}",
+  match => 'opcache.blacklist_filename=',
+} ->
+
+file_line { 'php_opcache_enable_cli':
+  path => "/etc/php/${php_version}/fpm/php.ini",
+  line => 'opcache.enable_cli=1',
+  match => 'opcache.enable_cli=',
+} ->
+
+file_line { 'php_opcache_revalidate_freq':
+  path => "/etc/php/${php_version}/fpm/php.ini",
+  line => 'opcache.revalidate_freq=60',
+  match => 'opcache.revalidate_freq=',
 } ->
 
 file_line { 'php_post_max_size':
