@@ -231,7 +231,7 @@ if $facts['os']['distro']['codename'] == 'xenial' {
   $php_version = '7.4'
 }
 
-$production_php_packages = [
+$php_packages = [
   "php${php_version}-fpm",
   "php${php_version}-gd",
   "php${php_version}-cli",
@@ -245,6 +245,8 @@ $production_php_packages = [
   'php-imagick'
 ]
 
+$opcache_blacklist_path = "/etc/php/${php_version}/fpm/opcache_blacklist.txt"
+
 # Don't install xdebug even in a development environment, because it simply
 # wrecks performance
 # if $is_dev_env {
@@ -256,8 +258,6 @@ $production_php_packages = [
 package { $php_packages:
   ensure => present
 } ->
-
-$opcache_blacklist_path = "/etc/php/${php_version}/fpm/opcache_blacklist.txt";
 
 file { $opcache_blacklist_path:
   ensure => file,
