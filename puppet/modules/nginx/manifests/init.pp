@@ -1,4 +1,4 @@
-class nginx::install (
+define nginx::install (
   $web_hostname = 'vagrantpress.test',
   $web_root = '/var/www/vagrantpress.test/public_html',
   $log_dir = '/var/www/vagrantpress.test/logs',
@@ -13,14 +13,12 @@ class nginx::install (
     $php_socket = 'unix:/run/php/php7.4-fpm.sock'
   }
 
-  package { 'nginx':
-    ensure => present,
-  }
+  ensure_packages(['nginx'])
 
-  file { '/etc/nginx/sites-enabled/default':
+  ensure_resource('file', '/etc/nginx/sites-enabled/default', {
     ensure => absent,
     require => Package['nginx']
-  }
+  })
 
   file { "/etc/nginx/sites-available/${web_hostname}.conf":
     content => template('nginx/nginx.conf.erb'),
@@ -36,10 +34,11 @@ class nginx::install (
     owner => 'root',
     group => 'root',
     mode => '0644',
-  } ~>
-
-  service { 'nginx':
-    ensure => running,
+    notify => Service['nginx'],
   }
+
+  ensure_resource('service', 'nginx', {
+    ensure => running,
+  })
 
 }

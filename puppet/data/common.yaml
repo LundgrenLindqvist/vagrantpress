@@ -1,39 +1,28 @@
 ---
-# hostname should always be a fully qualified domain name (eg. example.com) and
-# not an IP address. If the server doesn't have an associated domain name, set
-# wp_url to the appropriate IP address, eg "http://192.168.0.1"
-hostname: vagrantpress.test
-wp_url: http://vagrantpress.test
-wp_site_title: Vagrantpress
-
 ll_password: p4ssw0rd
 www_data_password: p4ssw0rd
 mysql_root_password: p4ssw0rd
-mysql_wordpress_password: p4ssw0rd
-mysql_wordpress_username: wordpress
-
-wp_admin_user: ll
-wp_admin_email: development@lundgrenlindqvist.se
-wp_admin_password: p4ssw0rd
-
-nginx_root: /var/www/vagrantpress.test/public_html
-log_dir: /var/www/vagrantpress.test/logs
-wordpress_root: /var/www/vagrantpress.test/public_html/wordpress
-phpmyadmin_root: /var/www/vagrantpress.test/public_html/phpmyadmin
-
-# nginx_root: /vagrant/public_html
-# log_dir: /vagrant/logs
-# wordpress_root: /vagrant/public_html/wordpress
-# phpmyadmin_root: /vagrant/public_html/phpmyadmin
-
 fail2ban_whitelist_ip: 80.252.215.138
+is_dev_env: false
 
-wordpress_version: 5.3.2
-phpmyadmin_version: 5.0.1
+sites:
+  vagrantpress.test:
+    nginx_root: /var/www/vagrantpress.test/public_html
+    log_dir: /var/www/vagrantpress.test/logs
 
-wp_plugins:
-  # REMEMBER: Update the k=example query string property in the ACF URL to your
-  # ACF Pro license key
-  advanced-custom-fields-pro: https://connect.advancedcustomfields.com/index.php?a=download&p=pro&k=example
-  query-monitor: query-monitor
-  wp-optimize: wp-optimize
+    wp_url: http://vagrantpress.test
+    wp_site_title: Vagrantpress
+    wp_admin_user: ll
+    wp_admin_email: development@lundgrenlindqvist.se
+    wp_admin_password: p4ssw0rd
+
+    mysql_password: p4ssw0rd
+    mysql_username: wordpress
+
+    wp_version: 5.3.2
+    phpmyadmin_version: 5.0.1
+
+    wp_plugins:
+      advanced-custom-fields-pro: https://connect.advancedcustomfields.com/index.php?a=download&p=pro&k=example
+      query-monitor: query-monitor
+      wp-optimize: wp-optimize

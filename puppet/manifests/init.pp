@@ -32,29 +32,6 @@ $certbot_renewal_hook_template = @(END)
 systemctl reload nginx
 END
 
-$web_hostname = lookup('hostname')
-$nginx_root = lookup('nginx_root')
-$log_dir = lookup('log_dir')
-$wordpress_root = lookup('wordpress_root')
-$fail2ban_whitelist_ip = lookup('fail2ban_whitelist_ip')
-
-$opcache_blacklist_template = @(END)
-${wordpress_root}/wp-content/themes/**/*
-END
-
-$wp_url = lookup('wp_url')
-$wp_admin_user = lookup('wp_admin_user')
-$wp_admin_email = lookup('wp_admin_email')
-$wp_admin_password = lookup('wp_admin_password')
-$wp_site_title = lookup('wp_site_title')
-$wp_plugins = lookup('wp_plugins')
-
-if $web_hostname =~ /\.test$/ {
-  $is_dev_env = true
-} else {
-  $is_dev_env = false
-}
-
 package { [
   'bash-completion',
   'certbot',
@@ -112,6 +89,8 @@ service { 'ssh':
   ensure => running,
 }
 
+$fail2ban_whitelist_ip = lookup('fail2ban_whitelist_ip')
+
 file_line { 'fail2ban_whitelist':
   path => '/etc/fail2ban/jail.conf',
   line => "ignoreip = 127.0.0.1/8 ::1 ${fail2ban_whitelist_ip}",
@@ -148,58 +127,7 @@ user { 'www-data':
   shell => '/bin/bash',
 }
 
-mkdir::p { "${nginx_root}":
-  owner => 'www-data',
-  group => 'www-data',
-  before => [
-    Class['nginx::install'],
-    Class['wordpress'],
-    Class['phpmyadmin::install'],
-    File["${nginx_root}/index.php"]
-  ]
-}
-
-mkdir::p { "${log_dir}":
-  owner => 'www-data',
-  group => 'www-data',
-  before => [
-    Class['nginx::install'],
-    Logrotate::Rule["${web_hostname}"]
-  ]
-}
-
-file { "${nginx_root}/index.php":
-  ensure => file,
-  content => inline_template($wp_index_template),
-  owner => 'www-data',
-  group => 'www-data'
-}
-
-class { 'nginx::install':
-  web_hostname => $web_hostname,
-  web_root => $nginx_root,
-  log_dir => $log_dir,
-  is_dev_env => $is_dev_env
-} ->
-
-logrotate::rule { "${web_hostname}":
-  path => "${log_dir}/*.log",
-  create => true,
-  create_group => 'www-data',
-  create_mode => '0640',
-  create_owner => 'www-data',
-  delaycompress => true,
-  ifempty => false,
-  missingok => true,
-  rotate => 14,
-  rotate_every => 'day',
-  sharedscripts => true,
-  prerotate =>
-    'if [ -d /etc/logrotate.d/httpd-prerotate ]; then \
-      run-parts /etc/logrotate.d/httpd-prerotate; \
-    fi',
-  postrotate => '[ ! -f /var/run/nginx.pid ] || kill -USR1 `cat /var/run/nginx.pid`',
-}
+$is_dev_env = lookup('is_dev_env')
 
 # When we run in a Vagrant environment, we need to wait for Vagrant to finish
 # mounting the shared folders before starting nginx. Why? Because nginx will
@@ -208,7 +136,7 @@ if $is_dev_env {
   file { '/etc/systemd/system/nginx.service':
     ensure => present,
     source => '/lib/systemd/system/nginx.service',
-    require => Class['nginx::install']
+    require => Package['nginx']
   } ->
 
   file_line { 'systemctl_nginx_vagrant':
@@ -245,8 +173,6 @@ $php_packages = [
   'php-imagick'
 ]
 
-$opcache_blacklist_path = "/etc/php/${php_version}/fpm/opcache_blacklist.txt"
-
 # Don't install xdebug even in a development environment, because it simply
 # wrecks performance
 # if $is_dev_env {
@@ -255,13 +181,14 @@ $opcache_blacklist_path = "/etc/php/${php_version}/fpm/opcache_blacklist.txt"
 #   $php_packages = $production_php_packages
 # }
 
+$opcache_blacklist_path = "/etc/php/${php_version}/fpm/opcache_blacklist.txt"
+
 package { $php_packages:
   ensure => present
 } ->
 
 file { $opcache_blacklist_path:
   ensure => file,
-  content => inline_template($opcache_blacklist_template),
   owner => 'root',
   group => 'root',
   mode => '0775',
@@ -339,80 +266,26 @@ class { 'mysql::server':
       'log-error' => '/var/log/mysql/mariadb.log',
     },
   },
-}->
-
-class { 'wordpress':
-  wp_owner => 'www-data',
-  wp_group => 'www-data',
-  db_user => lookup('mysql_wordpress_username'),
-  db_password => lookup('mysql_wordpress_password'),
-  install_dir => $wordpress_root,
-  wp_site_domain => "http://${web_hostname}",
-  version => lookup('wordpress_version')
-}
+} ->
 
 exec { 'download-wp-cli':
   command => "/usr/bin/curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > /usr/local/bin/wp",
   group => 'root',
   user => 'root',
   creates => '/usr/local/bin/wp',
-  require => Class['wordpress']
-}->
+} ->
 
 file { '/usr/local/bin/wp':
   ensure => present,
   owner => 'root',
   group => 'root',
   mode => '0755',
-}->
-
-exec { 'install-wp':
-  command => "echo '${wp_admin_password}' | wp core install --url=${wp_url} --title='${wp_site_title}' --admin_user='${wp_admin_user}' --admin_email=${wp_admin_email} --prompt=admin_password",
-  path => ['/bin', '/usr/bin', '/usr/local/bin'],
-  cwd => $wordpress_root,
-  group => 'www-data',
-  user => 'www-data',
-}->
-
-exec { 'update-wp-siteurl':
-  command => "/usr/local/bin/wp option update siteurl ${wp_url}/wordpress",
-  cwd => $wordpress_root,
-  group => 'www-data',
-  user => 'www-data',
-}->
-
-# Remove default Akismet plugin
-file { "$wordpress_root/wp-content/plugins/akismet":
-  ensure => absent,
-  force => true
-}
-
-# Remove default Hello Dolly plugin
-file { "$wordpress_root/wp-content/plugins/hello.php":
-  ensure => absent,
-}
-
-$wp_plugins.each |$plugin, $target| {
-  exec { "install-${plugin}":
-    command => "/usr/local/bin/wp plugin install '${target}'",
-    cwd => $wordpress_root,
-    creates => "${wordpress_root}/wp-content/plugins/${plugin}",
-    group => 'www-data',
-    user => 'www-data',
-  }
-}
-
-class { 'phpmyadmin::install':
-  version => lookup('phpmyadmin_version'),
-  install_dir => lookup('phpmyadmin_root'),
-  owner => 'www-data',
-  group => 'www-data'
-}
+} ->
 
 mkdir::p { '/etc/letsencrypt/renewal-hooks/post':
   owner => 'root',
   group => 'root',
-}->
+} ->
 
 file { '/etc/letsencrypt/renewal-hooks/post/nginx.sh':
   ensure => file,
@@ -420,4 +293,123 @@ file { '/etc/letsencrypt/renewal-hooks/post/nginx.sh':
   owner => 'root',
   group => 'root',
   mode => '0775',
+}
+
+$sites = lookup('sites')
+
+$sites.each |$web_hostname, $config| {
+  $nginx_root = $config['nginx_root']
+  $log_dir = $config['log_dir']
+  $wordpress_root = "${nginx_root}/wordpress"
+  $phpmyadmin_root = "${nginx_root}/phpmyadmin"
+
+  $wp_url = $config['wp_url']
+  $wp_admin_user = $config['wp_admin_user']
+  $wp_admin_email = $config['wp_admin_email']
+  $wp_admin_password = $config['wp_admin_password']
+  $wp_site_title = $config['wp_site_title']
+  $wp_plugins = $config['wp_plugins']
+
+  mkdir::p { "${nginx_root}":
+    owner => 'www-data',
+    group => 'www-data',
+  } ->
+
+  mkdir::p { "${log_dir}":
+    owner => 'www-data',
+    group => 'www-data',
+  } ->
+
+  file { "${nginx_root}/index.php":
+    ensure => file,
+    content => $wp_index_template,
+    owner => 'www-data',
+    group => 'www-data'
+  } ->
+
+  nginx::install { $web_hostname:
+    web_hostname => $web_hostname,
+    web_root => $nginx_root,
+    log_dir => $log_dir,
+    is_dev_env => $is_dev_env
+  } ->
+
+  logrotate::rule { $web_hostname:
+    path => "${log_dir}/*.log",
+    create => true,
+    create_group => 'www-data',
+    create_mode => '0640',
+    create_owner => 'www-data',
+    delaycompress => true,
+    ifempty => false,
+    missingok => true,
+    rotate => 14,
+    rotate_every => 'day',
+    sharedscripts => true,
+    prerotate =>
+      'if [ -d /etc/logrotate.d/httpd-prerotate ]; then \
+        run-parts /etc/logrotate.d/httpd-prerotate; \
+      fi',
+    postrotate => '[ ! -f /var/run/nginx.pid ] || kill -USR1 `cat /var/run/nginx.pid`',
+  }
+
+  file_line { "opcache_blacklist_${web_hostname}":
+    path => $opcache_blacklist_path,
+    line => "${wordpress_root}/wp-content/themes/**/*",
+  }
+
+  wordpress::instance { $web_hostname:
+    wp_owner => 'www-data',
+    wp_group => 'www-data',
+    db_name => $web_hostname,
+    db_user => $config['mysql_username'],
+    db_password => $config['mysql_password'],
+    install_dir => $wordpress_root,
+    version => $config['wp_version']
+  }
+
+  exec { "install-wp-${web_hostname}":
+    command => "echo '${wp_admin_password}' | wp core install --url=${wp_url} --title='${wp_site_title}' --admin_user='${wp_admin_user}' --admin_email=${wp_admin_email} --prompt=admin_password",
+    path => ['/bin', '/usr/bin', '/usr/local/bin'],
+    cwd => $wordpress_root,
+    group => 'www-data',
+    user => 'www-data',
+    require => Wordpress::Instance[$web_hostname]
+  } ->
+
+  exec { "update-wp-siteurl-${web_hostname}":
+    command => "/usr/local/bin/wp option update siteurl ${wp_url}/wordpress",
+    cwd => $wordpress_root,
+    group => 'www-data',
+    user => 'www-data',
+  } ->
+
+  # Remove default Akismet plugin
+  file { "${wordpress_root}/wp-content/plugins/akismet":
+    ensure => absent,
+    force => true
+  } ->
+
+  # Remove default Hello Dolly plugin
+  file { "${wordpress_root}/wp-content/plugins/hello.php":
+    ensure => absent,
+  }
+
+  $wp_plugins.each |$plugin, $target| {
+    exec { "install-${plugin}-${web_hostname}":
+      command => "/usr/local/bin/wp plugin install '${target}'",
+      cwd => $wordpress_root,
+      creates => "${wordpress_root}/wp-content/plugins/${plugin}",
+      group => 'www-data',
+      user => 'www-data',
+      require => Wordpress::Instance[$web_hostname]
+    }
+  }
+
+  phpmyadmin::install { $web_hostname:
+    version => $config['phpmyadmin_version'],
+    install_dir => $phpmyadmin_root,
+    owner => 'www-data',
+    group => 'www-data'
+  }
 }

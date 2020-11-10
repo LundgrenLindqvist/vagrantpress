@@ -1,4 +1,4 @@
-class phpmyadmin::install (
+define phpmyadmin::install (
   $version = "4.7.9",
   $install_dir = "/var/www/phpmyadmin",
   $group = "vagrant",
@@ -12,7 +12,7 @@ class phpmyadmin::install (
     owner => $owner
   }
 
-  exec { "download-phpmyadmin":
+  exec { "download-phpmyadmin-${install_dir}":
     command => "/usr/bin/wget https://files.phpmyadmin.net/phpMyAdmin/${version}/phpMyAdmin-${version}-all-languages.tar.gz",
     cwd => "${install_dir}/",
     group => $group,
@@ -21,7 +21,7 @@ class phpmyadmin::install (
     creates => "${install_dir}/phpMyAdmin-${version}-all-languages.tar.gz"
   }->
 
-  exec { "untar-phpmyadmin":
+  exec { "untar-phpmyadmin-${install_dir}":
     command => "/bin/tar xzf ${install_dir}/phpMyAdmin-${version}-all-languages.tar.gz --strip-components=1",
     cwd => "${install_dir}/",
     group => $group,
