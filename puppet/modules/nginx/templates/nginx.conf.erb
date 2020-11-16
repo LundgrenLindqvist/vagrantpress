@@ -119,7 +119,7 @@ server {
         fastcgi_read_timeout 300;
     }
 
-    <%- unless @phpmyadmin_allow_ip -%>
+    <%- if @phpmyadmin_allow_ip -%>
     location /phpmyadmin {
         # Block all IP's except LL IP
         allow <%= @phpmyadmin_allow_ip %>;
