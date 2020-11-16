@@ -2,7 +2,10 @@ define nginx::install (
   $web_hostname = 'vagrantpress.test',
   $web_root = '/var/www/vagrantpress.test/public_html',
   $log_dir = '/var/www/vagrantpress.test/logs',
-  $is_dev_env = true
+  $is_vagrant_env = true,
+  $wp_upload_proxy_url = false,
+  $phpmyadmin_allow_ip = false,
+  $is_default_host = true,
 ) {
 
   if $facts['os']['distro']['codename'] == 'xenial' {

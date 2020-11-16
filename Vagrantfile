@@ -7,7 +7,7 @@ require "yaml"
 Vagrant.require_version ">= 2.0.0"
 
 hiera_data = YAML.load_file("puppet/data/common.yaml")
-hostname = hiera_data["hostname"]
+hostname = hiera_data["sites"].keys[0]
 ip_slot4 = rand(255)
 
 while ip_slot4 == 1
@@ -37,6 +37,9 @@ Vagrant.configure("2") do |config|
     puppet.module_path = "puppet/modules"
     puppet.manifest_file = "init.pp"
     puppet.hiera_config_path = "puppet/hiera-development.yaml"
+    puppet.facter = {
+      "is_vagrant_env" => true
+    }
   end
 
   config.vm.provider :virtualbox do |vb|

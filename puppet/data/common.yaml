@@ -2,13 +2,20 @@
 ll_password: p4ssw0rd
 www_data_password: p4ssw0rd
 mysql_root_password: p4ssw0rd
+# When using a Vagrant environment, you should set `fail2ban_whitelist_ip` to
+# `false` to disable fail2ban and prevent IP based access rules to phpMyAdmin
 fail2ban_whitelist_ip: 80.252.215.138
-is_dev_env: false
 
 sites:
   vagrantpress.test:
     nginx_root: /var/www/vagrantpress.test/public_html
     log_dir: /var/www/vagrantpress.test/logs
+    # `wp_upload_proxy_url` is useful when setting up a local dev environment
+    # for an existing site. It makes it so you don't need to download the
+    # `wp-content/uploads` folder. If a file in that folder is missing on the
+    # local HDD, then it will be fetched from the remote URL. To use it, set the
+    # value to eg. https://example.com.
+    wp_upload_proxy_url: false
 
     wp_url: http://vagrantpress.test
     wp_site_title: Vagrantpress

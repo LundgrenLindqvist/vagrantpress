@@ -91,14 +91,16 @@ service { 'ssh':
 
 $fail2ban_whitelist_ip = lookup('fail2ban_whitelist_ip')
 
-file_line { 'fail2ban_whitelist':
-  path => '/etc/fail2ban/jail.conf',
-  line => "ignoreip = 127.0.0.1/8 ::1 ${fail2ban_whitelist_ip}",
-  match => '^#?ignoreip =',
-} ~>
+if $fail2ban_whitelist_ip {
+  file_line { 'fail2ban_whitelist':
+    path => '/etc/fail2ban/jail.conf',
+    line => "ignoreip = 127.0.0.1/8 ::1 ${fail2ban_whitelist_ip}",
+    match => '^#?ignoreip =',
+  } ~>
 
-service { 'fail2ban':
-  ensure => running,
+  service { 'fail2ban':
+    ensure => running,
+  }
 }
 
 # This is a good one! sendmail wants to send from a FQDN (fully qualified domain
@@ -127,12 +129,10 @@ user { 'www-data':
   shell => '/bin/bash',
 }
 
-$is_dev_env = lookup('is_dev_env')
-
 # When we run in a Vagrant environment, we need to wait for Vagrant to finish
 # mounting the shared folders before starting nginx. Why? Because nginx will
 # protest when the log directories aren't present otherwise
-if $is_dev_env {
+if $::is_vagrant_env {
   file { '/etc/systemd/system/nginx.service':
     ensure => present,
     source => '/lib/systemd/system/nginx.service',
@@ -172,14 +172,6 @@ $php_packages = [
   'php-apcu',
   'php-imagick'
 ]
-
-# Don't install xdebug even in a development environment, because it simply
-# wrecks performance
-# if $is_dev_env {
-#   $php_packages = $production_php_packages << 'php-xdebug'
-# } else {
-#   $php_packages = $production_php_packages
-# }
 
 $opcache_blacklist_path = "/etc/php/${php_version}/fpm/opcache_blacklist.txt"
 
@@ -331,7 +323,10 @@ $sites.each |$web_hostname, $config| {
     web_hostname => $web_hostname,
     web_root => $nginx_root,
     log_dir => $log_dir,
-    is_dev_env => $is_dev_env
+    is_vagrant_env => $::is_vagrant_env,
+    wp_upload_proxy_url => $config['wp_upload_proxy_url'],
+    phpmyadmin_allow_ip => $fail2ban_whitelist_ip,
+    is_default_host => length($sites) == 1,
   } ->
 
   logrotate::rule { $web_hostname:
