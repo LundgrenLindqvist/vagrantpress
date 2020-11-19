@@ -119,6 +119,15 @@ server {
         fastcgi_read_timeout 300;
     }
 
+    # Protect WooCommerce upload folder from being accessed directly. See:
+    # https://docs.woocommerce.com/document/digital-downloadable-product-handling/
+    location ~* /wordpress/wp-content/uploads/woocommerce_uploads/ {
+        if ($upstream_http_x_accel_redirect = "") {
+            return 403;
+        }
+        internal;
+    }
+
     <%- if @phpmyadmin_allow_ip -%>
     location /phpmyadmin {
         # Block all IP's except LL IP
