@@ -127,6 +127,13 @@ user { 'www-data':
   managehome => true,
   password => pw_hash(lookup('www_data_password'), 'SHA-512', 'CPHsF9v'),
   shell => '/bin/bash',
+} ->
+
+file { '/var/www':
+  ensure => 'directory',
+  owner => 'www-data',
+  group => 'www-data',
+  recurse => true
 }
 
 # When we run in a Vagrant environment, we need to wait for Vagrant to finish
