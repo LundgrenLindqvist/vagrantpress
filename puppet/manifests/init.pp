@@ -174,6 +174,7 @@ $php_packages = [
   "php${php_version}-intl",
   "php${php_version}-mbstring",
   "php${php_version}-mysql",
+  "php${php_version}-soap",
   "php${php_version}-xml",
   "php${php_version}-zip",
   'php-apcu',
