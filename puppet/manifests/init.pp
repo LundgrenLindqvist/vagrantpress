@@ -409,6 +409,14 @@ $sites.each |$web_hostname, $config| {
     }
   }
 
+  if $::is_vagrant_env {
+    file_line { 'wordpress_environment_development':
+      path => "${wordpress_root}/wp-config.php",
+      line => "define('WP_ENVIRONMENT_TYPE', 'development');",
+      require => Exec["install-wp-${web_hostname}"]
+    }
+  }
+
   phpmyadmin::install { $web_hostname:
     version => $config['phpmyadmin_version'],
     install_dir => $phpmyadmin_root,
