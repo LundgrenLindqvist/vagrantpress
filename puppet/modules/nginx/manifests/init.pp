@@ -18,6 +18,8 @@ define nginx::install (
 
   ensure_packages(['nginx'])
 
+  $server_ip = $serverip;
+
   ensure_resource('file', '/etc/nginx/sites-enabled/default', {
     ensure => absent,
     require => Package['nginx']

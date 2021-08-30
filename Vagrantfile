@@ -15,9 +15,8 @@ while ip_slot4 == 1
 end
 
 Vagrant.configure("2") do |config|
-  # We would prefer to use the official ubuntu/xenial64 box, but it has given us
-  # a lot of grief with SSH authentication failures, so we tried this box
-  # instead
+  # We would prefer to use the official ubuntu box, but it has given us a lot of
+  # grief with SSH authentication failures, so we tried this box instead
   config.vm.box = "bento/ubuntu-20.04"
 
   config.vm.synced_folder ".", "/vagrant", :owner => "www-data", :group => "www-data", :mount_options => ["dmode=755,fmode=644"]

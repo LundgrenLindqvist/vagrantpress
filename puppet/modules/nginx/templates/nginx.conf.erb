@@ -24,7 +24,7 @@ server {
     <%- else -%>
     listen 80;
     <%- end -%>
-    server_name <%= @web_hostname %> www.<%= @web_hostname %>;
+    server_name <%= @web_hostname %> www.<%= @web_hostname %> <%= @server_ip %>;
 
     # Block all IP's except LL IP
     # allow 80.252.215.138;
