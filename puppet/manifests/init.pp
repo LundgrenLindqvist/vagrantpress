@@ -301,7 +301,7 @@ $sites.each |$web_hostname, $config| {
   $nginx_root = $config['nginx_root']
   $log_dir = $config['log_dir']
   $wordpress_root = "${nginx_root}/wordpress"
-  $phpmyadmin_root = "${nginx_root}/phpmyadmin"
+  $adminer_root = "${nginx_root}/adminer"
 
   $wp_url = $config['wp_url']
   $wp_admin_user = $config['wp_admin_user']
@@ -333,7 +333,7 @@ $sites.each |$web_hostname, $config| {
     log_dir => $log_dir,
     is_vagrant_env => $::is_vagrant_env,
     wp_upload_proxy_url => $config['wp_upload_proxy_url'],
-    phpmyadmin_allow_ip => $fail2ban_whitelist_ip,
+    adminer_allow_ip => $fail2ban_whitelist_ip,
     is_default_host => length($sites) == 1,
   } ->
 
@@ -417,9 +417,8 @@ $sites.each |$web_hostname, $config| {
     }
   }
 
-  phpmyadmin::install { $web_hostname:
-    version => $config['phpmyadmin_version'],
-    install_dir => $phpmyadmin_root,
+  adminer::install { $web_hostname:
+    install_dir => $adminer_root,
     owner => 'www-data',
     group => 'www-data'
   }

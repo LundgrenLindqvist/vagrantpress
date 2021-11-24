@@ -1,6 +1,6 @@
 # L+L server configuration
 
-This repository contains [Puppet](https://puppet.com/) scripts for setting up a new Ubuntu server with WordPress and phpMyAdmin installed. The following Ubuntu versions are supported:
+This repository contains [Puppet](https://puppet.com/) scripts for setting up a new Ubuntu server with WordPress and Adminer installed. The following Ubuntu versions are supported:
 
 - Ubuntu 16.04 (Xenial Xerus)
 - Ubuntu 18.04 (Bionic Beaver)

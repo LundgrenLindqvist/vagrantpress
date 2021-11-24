@@ -4,7 +4,7 @@ define nginx::install (
   $log_dir = '/var/www/vagrantpress.test/logs',
   $is_vagrant_env = true,
   $wp_upload_proxy_url = false,
-  $phpmyadmin_allow_ip = false,
+  $adminer_allow_ip = false,
   $is_default_host = true,
 ) {
 

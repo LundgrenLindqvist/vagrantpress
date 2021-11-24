@@ -3,7 +3,7 @@ ll_password: p4ssw0rd
 www_data_password: p4ssw0rd
 mysql_root_password: p4ssw0rd
 # When using a Vagrant environment, you should set `fail2ban_whitelist_ip` to
-# `false` to disable fail2ban and prevent IP based access rules to phpMyAdmin
+# `false` to disable fail2ban and prevent IP based access rules to Adminer
 fail2ban_whitelist_ip: 80.252.215.138
 
 sites:
@@ -27,7 +27,6 @@ sites:
     mysql_username: wordpress
 
     wp_version: 5.3.2
-    phpmyadmin_version: 5.0.1
 
     wp_plugins:
       advanced-custom-fields-pro: https://connect.advancedcustomfields.com/index.php?a=download&p=pro&k=example

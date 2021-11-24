@@ -128,10 +128,10 @@ server {
         internal;
     }
 
-    <%- if @phpmyadmin_allow_ip -%>
-    location /phpmyadmin {
+    <%- if @adminer_allow_ip -%>
+    location /adminer {
         # Block all IP's except LL IP
-        allow <%= @phpmyadmin_allow_ip %>;
+        allow <%= @adminer_allow_ip %>;
         deny all;
     }
     <%- end -%>

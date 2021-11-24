@@ -8,4 +8,4 @@ latest.tar.gz
 /puppet/modules/*
 !/puppet/modules/nginx
 !/puppet/modules/php7
-!/puppet/modules/phpmyadmin
+!/puppet/modules/adminer
