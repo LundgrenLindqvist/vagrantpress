@@ -231,11 +231,11 @@ file_line { 'php_opcache_blacklist_filename':
   match => 'opcache.blacklist_filename=',
 } ->
 
-file_line { 'php_opcache_enable_cli':
-  path => "/etc/php/${php_version}/fpm/php.ini",
-  line => 'opcache.enable_cli=1',
-  match => 'opcache.enable_cli=',
-} ->
+# file_line { 'php_opcache_enable_cli':
+#   path => "/etc/php/${php_version}/fpm/php.ini",
+#   line => 'opcache.enable_cli=1',
+#   match => 'opcache.enable_cli=',
+# } ->
 
 file_line { 'php_opcache_revalidate_freq':
   path => "/etc/php/${php_version}/fpm/php.ini",
