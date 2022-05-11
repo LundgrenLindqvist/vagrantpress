@@ -164,6 +164,8 @@ if $facts['os']['distro']['codename'] == 'xenial' {
   $php_version = '7.2'
 } elsif $facts['os']['distro']['codename'] == 'focal' {
   $php_version = '7.4'
+} elsif $facts['os']['distro']['codename'] == 'jammy' {
+  $php_version = '8.1'
 }
 
 $php_packages = [
