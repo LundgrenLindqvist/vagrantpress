@@ -5,18 +5,9 @@ This repository contains [Puppet](https://puppet.com/) scripts for setting up a 
 - Ubuntu 16.04 (Xenial Xerus)
 - Ubuntu 18.04 (Bionic Beaver)
 - Ubuntu 20.04 (Focal Fossa)
+- Ubuntu 22.04 (Jammy Jellyfish)
 
 There's also a Vagrantfile here! That's because these server configuration scripts grew out of our fork of [vagrantpress](https://github.com/vagrantpress/vagrantpress). Now, we use the same server deployment scripts for production and development environments, so it makes sense to keep it all in one place.
-
-## Getting started with a development environment
-
-1. [Download](https://github.com/LundgrenLindqvist/vagrantpress/archive/master.tar.gz) the project
-2. Extract the directory and `cd` into it
-3. Run `vagrant plugin install vagrant-hostsupdater` if you haven't already
-4. Change the variables in `puppet/data/common.yaml` as needed
-5. Run `vagrant up`
-6. Open [vagrantpress.test](http://vagrantpress.test) in your browser
-7. That's it! 🐵
 
 ## Getting started with a production environment
 
@@ -28,6 +19,16 @@ There's also a Vagrantfile here! That's because these server configuration scrip
 6. Run `vagrantpress-master/puppet/production-puppet-apply.sh`
 7. Remove the setup files by running `rm -r master.tar.gz vagrantpress-master` . Only the root user can access them, but they still contain user passwords that could be sensitive if left lying around.
 8. That's it! 🐵
+
+## Getting started with a development environment
+
+1. [Download](https://github.com/LundgrenLindqvist/vagrantpress/archive/master.tar.gz) the project
+2. Extract the directory and `cd` into it
+3. Run `vagrant plugin install vagrant-hostsupdater` if you haven't already
+4. Change the variables in `puppet/data/common.yaml` as needed
+5. Run `vagrant up`
+6. Open [vagrantpress.test](http://vagrantpress.test) in your browser
+7. That's it! 🐵
 
 ## Acknowledgments
 

@@ -14,6 +14,8 @@ define nginx::install (
     $php_socket = 'unix:/run/php/php7.2-fpm.sock'
   } elsif $facts['os']['distro']['codename'] == 'focal' {
     $php_socket = 'unix:/run/php/php7.4-fpm.sock'
+  } elsif $facts['os']['distro']['codename'] == 'jammy' {
+    $php_socket = 'unix:/run/php/php8.1-fpm.sock'
   }
 
   ensure_packages(['nginx'])
