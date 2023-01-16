@@ -263,6 +263,7 @@ class { 'mysql::server':
     mysqld => {
       'log-error' => '/var/log/mysql/mariadb.log',
       'pid-file'  => '/var/run/mysqld/mysqld.pid',
+      'ssl' => false,
     },
     mysqld_safe => {
       'log-error' => '/var/log/mysql/mariadb.log',
